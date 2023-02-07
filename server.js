@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const db = require("./db");
+const { router: AuthRouter } = require("./auth-router");
 
 const morgan = require("morgan");
 
@@ -9,6 +10,12 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+app.use("/auth", AuthRouter);
+
+app.get("/", (req, res) => {
+  res.send("Weclcome to the root directory");
+});
 
 // Get all Restaurants
 app.get("/restaurants", async (req, res) => {
