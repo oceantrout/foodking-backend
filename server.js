@@ -22,7 +22,7 @@ app.get("/restaurants", async (req, res) => {
   try {
     //const results = await db.query("select * from restaurants");
     const restaurantRatingsData = await db.query(
-      "select * from restaurants order by restaurant_id asc;"
+      "select * from restaurants left join( select restaurant_id, count(*), TRUNC(AVG(rating)) as average_rating from reviews group by restaurant_id) as rating on restaurants.restaurant_id = rating.restaurant_id"
     );
 
     res.status(200).json({
@@ -43,7 +43,7 @@ app.get("/restaurants/:id", async (req, res) => {
 
   try {
     const restaurant = await db.query(
-      "select * from restaurants left join (select restaurant_id, COUNT(*), TRUNC(AVG(rating),1) as average_rating from reviews group by restaurant_id) reviews on restaurants.id = reviews.restaurant_id where id = $1",
+      "select * from restaurants left join( select restaurant_id, count(*), TRUNC(AVG(rating)) as average_rating from reviews group by restaurant_id) as rating on restaurants.restaurant_id = rating.restaurant_id where restaurants.restaurant_id= $1",
       [req.params.id]
     );
     // select * from restaurants wehre id = req.params.id
