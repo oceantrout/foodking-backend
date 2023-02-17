@@ -3,12 +3,16 @@ const express = require("express");
 const cors = require("cors");
 const db = require("./db");
 const { router: AuthRouter } = require("./auth-router");
-
+const corsOptions = {
+  origin: "*",
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
 const morgan = require("morgan");
 
 const app = express();
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use("/auth", AuthRouter);
