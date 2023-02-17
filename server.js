@@ -73,8 +73,13 @@ app.post("/restaurants", async (req, res) => {
 
   try {
     const results = await db.query(
-      "INSERT INTO restaurants (name, location, price_range) values ($1, $2, $3) returning *",
-      [req.body.name, req.body.location, req.body.price_range]
+      "INSERT INTO restaurants (name, location, price_range) values ($1, $2, $3, $4) returning *",
+      [
+        req.body.name,
+        req.body.location,
+        req.body.price_range,
+        req.body.resaurant_id,
+      ]
     );
     console.log(results);
     res.status(201).json({
@@ -93,7 +98,7 @@ app.post("/restaurants", async (req, res) => {
 app.put("/restaurants/:id", async (req, res) => {
   try {
     const results = await db.query(
-      "UPDATE restaurants SET name = $1, location = $2, price_range = $3 where id = $4 returning *",
+      "UPDATE restaurants SET name = $1, location = $2, price_range = $3 where restaurant_id = $4 returning *",
       [req.body.name, req.body.location, req.body.price_range, req.params.id]
     );
 
@@ -114,9 +119,10 @@ app.put("/restaurants/:id", async (req, res) => {
 
 app.delete("/restaurants/:id", async (req, res) => {
   try {
-    const results = db.query("DELETE FROM restaurants where id = $1", [
-      req.params.id,
-    ]);
+    const results = db.query(
+      "DELETE FROM restaurants where restaurant_id = $1",
+      [req.params.id]
+    );
     res.status(204).json({
       status: "sucess",
     });
