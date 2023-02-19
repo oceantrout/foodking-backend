@@ -102,8 +102,16 @@ app.post("/restaurants", async (req, res) => {
 app.put("/restaurants/:id", async (req, res) => {
   try {
     const results = await db.query(
-      "UPDATE restaurants SET name = $1, location = $2, price_range = $3 where restaurant_id = $4 returning *",
-      [req.body.name, req.body.location, req.body.price_range, req.params.id]
+      "UPDATE restaurants SET name = $1, location = $2, price_range = $3, address = $4, image_url=$5, type_of_food=$6 where restaurant_id = $7 returning *",
+      [
+        req.body.name,
+        req.body.location,
+        req.body.price_range,
+        req.body.address,
+        req.body.image_url,
+        req.body.type_of_food,
+        req.params.id,
+      ]
     );
 
     res.status(200).json({
